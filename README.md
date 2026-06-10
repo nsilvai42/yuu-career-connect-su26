@@ -8,6 +8,7 @@ One Netlify site, three things students use, one analytics funnel:
 | `/guide` | **Student Guide** — program overview, completion goal, tools, coaching | Static HTML, `public/guide.html` (print-layout source of `guide.pdf`) |
 | `/catalog` | **Workshop Catalog** — all 12 workshops, CORE vs. BOOST tracks | Static HTML, `public/catalog.html` |
 | `/guide.pdf`, `/catalog.pdf` | PDF versions for email attachments | `public/` |
+| `/privacy` | **Privacy notice** — plain-language disclosure (Clarity analytics, no PII). Linked discreetly from all three pages. ⚠️ Draft — have YUU privacy/legal review wording, retention, and the "Last updated" date before launch. | `public/privacy.html` |
 
 Built by ideas42 for the Year Up United Career Connect Summer 2026 pilot
 (Dell Foundation grant). Behavioral design features: endowed progress ring,

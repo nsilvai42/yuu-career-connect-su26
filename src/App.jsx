@@ -950,6 +950,14 @@ export default function App() {
           </div>
         )}
       </main>
+      <footer className="max-w-3xl mx-auto px-4 sm:px-6 pb-10 pt-2 text-center">
+        <p className="text-xs text-gray-400">
+          Year Up United · Career Connect · Summer 2026 &nbsp;·&nbsp;
+          <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600">
+            Privacy notice
+          </a>
+        </p>
+      </footer>
     </div>
   );
 }
