@@ -10,13 +10,28 @@
   status = 200
 
 [[redirects]]
+  from = "/guide-pre-registration"
+  to = "/guide-pre-registration.html"
+  status = 200
+
+[[redirects]]
   from = "/catalog"
   to = "/catalog.html"
   status = 200
 
 [[redirects]]
+  from = "/catalog-pre-registration"
+  to = "/catalog-pre-registration.html"
+  status = 200
+
+[[redirects]]
   from = "/privacy"
   to = "/privacy.html"
+  status = 200
+
+[[redirects]]
+  from = "/pre-registration"
+  to = "/index.html"
   status = 200
 
 [[redirects]]
