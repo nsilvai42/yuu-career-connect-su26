@@ -194,7 +194,7 @@ const BLURBS = {
 
 // Student portal (registration + Brightspace access). Used as the calendar
 // LOCATION and in join instructions whenever a student hasn't pasted a Zoom link.
-const PORTAL_URL = "https://yuprogram.my.site.com/CareerConnect/login";
+const PORTAL_URL = "https://yuprogram.my.site.com/CareerConnect/s/";
 
 /* -------------------- REGISTRATION WINDOW (pre-reg mode) --------------------
    Newly enrolled students can register for KICKOFF right away, but workshop /
