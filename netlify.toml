@@ -15,6 +15,11 @@
   status = 200
 
 [[redirects]]
+  from = "/guide-registration-open"
+  to = "/guide-registration-open.html"
+  status = 200
+
+[[redirects]]
   from = "/catalog"
   to = "/catalog.html"
   status = 200
@@ -22,6 +27,11 @@
 [[redirects]]
   from = "/catalog-pre-registration"
   to = "/catalog-pre-registration.html"
+  status = 200
+
+[[redirects]]
+  from = "/catalog-registration-open"
+  to = "/catalog-registration-open.html"
   status = 200
 
 [[redirects]]
@@ -35,9 +45,21 @@
   status = 200
 
 [[redirects]]
+  from = "/registration-open"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
   from = "/planner"
   to = "/"
   status = 301
+
+# Stable owned shortlink for the external student portal (updatable in one place)
+[[redirects]]
+  from = "/portal"
+  to = "https://yuprogram.my.site.com/CareerConnect/"
+  status = 301
+  force = true
 
 # Unlisted pilot: keep the whole site out of search engines.
 [[headers]]

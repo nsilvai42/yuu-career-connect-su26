@@ -42,7 +42,7 @@ const WORKSHOP_SLOTS = {
     { date: "2026-07-01", startTime: "18:00", joinLink: "https://yearup.zoom.us/j/95453381601" },
     { date: "2026-07-01", startTime: "20:00", joinLink: "https://yearup.zoom.us/j/92033115757" },
   ],
-  "Building Strong Work Relationships": [
+  "Managing Your Manager": [
     { date: "2026-06-30", startTime: "14:00", joinLink: "https://yearup.zoom.us/j/95268977152" },
     { date: "2026-06-30", startTime: "18:00", joinLink: "https://yearup.zoom.us/j/91556461015" },
     { date: "2026-06-30", startTime: "20:00", joinLink: "https://yearup.zoom.us/j/96908983602" },
@@ -130,7 +130,7 @@ const WORKSHOPS = [
   { id: "w1a", name: "Building Your Confidence",          track: "BOOST", week: 1, range: "Jun 22–26",    monday: "2026-06-22", friday: "2026-06-26" },
   { id: "w1b", name: "Owning Your Role",               track: "BOOST", week: 1, range: "Jun 22–26",    monday: "2026-06-22", friday: "2026-06-26" },
   { id: "w2a", name: "Setting Success Goals",                 track: "CORE", week: 2, range: "Jun 29–Jul 3", monday: "2026-06-29", friday: "2026-07-03" },
-  { id: "w2b", name: "Building Strong Work Relationships",        track: "BOOST", week: 2, range: "Jun 29–Jul 3", monday: "2026-06-29", friday: "2026-07-03" },
+  { id: "w2b", name: "Managing Your Manager",        track: "BOOST", week: 2, range: "Jun 29–Jul 3", monday: "2026-06-29", friday: "2026-07-03" },
   { id: "w3a", name: "Fostering Inclusion",                         track: "BOOST", week: 3, range: "Jul 6–10",     monday: "2026-07-06", friday: "2026-07-10" },
   { id: "w3b", name: "AI in the Workplace",          track: "CORE", week: 3, range: "Jul 6–10",     monday: "2026-07-06", friday: "2026-07-10" },
   { id: "w4a", name: "Unlocking a Growth Mindset",               track: "BOOST", week: 4, range: "Jul 13–17",    monday: "2026-07-13", friday: "2026-07-17" },
@@ -172,7 +172,7 @@ const BLURBS = {
     "Accountability is one of the most sought-after skills in any workplace. In this engaging workshop, you will explore how strong communication and collaboration build trust and drive results. Through interactive activities, you will practice strategies to take ownership of your work, contribute to shared goals, and support your team's success.",
   "Setting Success Goals":
     "Achieving your dreams starts with setting clear, actionable goals. In this hands-on workshop, you will learn how to use the SMART goal framework to create realistic, meaningful goals and develop strategies to stay motivated. You will leave with a personalized plan to overcome obstacles and move confidently toward your next milestone.",
-  "Building Strong Work Relationships":
+  "Managing Your Manager":
     "Your relationship with your manager can shape your career success. In this workshop, you will learn how to manage up by understanding expectations, communicating effectively, and supporting your manager's goals. Through real-world scenarios, you will practice strategies to build trust, navigate challenges, and create a positive, productive working relationship.",
   "Fostering Inclusion":
     "Creating inclusive spaces begins with understanding and action. In this workshop, you will explore real-world examples of bias, privilege, and discrimination while learning strategies to promote equity and belonging. Through discussion and group activities, you will gain tools to advocate for inclusive practices in your school, workplace, and community.",
