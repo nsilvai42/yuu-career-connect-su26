@@ -196,25 +196,11 @@ const BLURBS = {
 // LOCATION and in join instructions whenever a student hasn't pasted a Zoom link.
 const PORTAL_URL = "https://yuprogram.my.site.com/CareerConnect/";
 
-/* -------------------- REGISTRATION WINDOW (pre-reg mode) --------------------
-   The registration-open planner lives at /. The pre-registration planner lives
-   at /pre-registration and uses "plan ahead" language without naming an open
-   date:
-     - kickoff exports normally,
-     - planned workshops export as TENTATIVE holds with a "register first" note,
-     - the visible copy says registrations will open soon.
-   Testing override: append ?regopen=0 (force pre-reg) or ?regopen=1 (force open)
-   to the URL. */
-const currentPath =
-  typeof window !== "undefined" ? window.location.pathname.replace(/\/+$/, "") || "/" : "/";
-const IS_PRE_REG_ROUTE = currentPath === "/pre-registration";
-const regOverride =
-  typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("regopen") : null;
-const REGISTRATION_IS_OPEN =
-  regOverride === "1" ? true : regOverride === "0" ? false : !IS_PRE_REG_ROUTE;
-const PLANNER_PATH = REGISTRATION_IS_OPEN ? "/" : "/pre-registration";
-const GUIDE_PATH = REGISTRATION_IS_OPEN ? "/guide" : "/guide-pre-registration";
-const CATALOG_PATH = REGISTRATION_IS_OPEN ? "/catalog" : "/catalog-pre-registration";
+/* -------------------- REGISTRATION WINDOW (registration-open mode) --------------------
+   Summer 2026 registration is open, so every public planner route uses the
+   registration-open flow. */
+const GUIDE_PATH = "/guide-registration-open";
+const CATALOG_PATH = "/catalog-registration-open";
 
 /* --------------------------------- ANALYTICS ---------------------------------
    Thin wrapper over Microsoft Clarity custom events (snippet lives in
@@ -241,18 +227,11 @@ const PORTAL_JOIN_STEPS =
   "3. In your Brightspace course, find the Calendar on the right side of the page.\n" +
   "4. Open this session's calendar event and click the Zoom link inside it.";
 
-// Prefixed to plan-ahead (pre-registration) workshop invites.
-const PLAN_ONLY_NOTE =
-  `PLAN ONLY — registrations will open soon. ` +
-  `You must register for this session in the student portal before attending: ${PORTAL_URL}`;
-
 // One description for every invite (ICS + deep links).
 // With a pasted link: "Join here: <link>" goes FIRST, then the blurb.
 // Without a link: blurb first, then the portal/Brightspace join steps.
-// In plan-ahead mode, non-kickoff events lead with a "register first" note.
 const eventDesc = (s) => {
   const blurb = BLURBS[s.name];
-  const planOnly = !REGISTRATION_IS_OPEN && s.source !== "kickoff";
   let body;
   if (s.joinLink) {
     const join = `Join here: ${s.joinLink}`;
@@ -260,7 +239,7 @@ const eventDesc = (s) => {
   } else {
     body = blurb ? `${blurb}\n\n${PORTAL_JOIN_STEPS}` : PORTAL_JOIN_STEPS;
   }
-  return planOnly ? `${PLAN_ONLY_NOTE}\n\n${body}` : body;
+  return body;
 };
 
 // Calendar LOCATION: the pasted link if present, otherwise the portal URL.
@@ -327,15 +306,14 @@ const buildICS = (sessions) => {
     const dtStart = `${compactDate(s.date)}T${compactTime(s.startTime)}`;
     const dtEnd = `${compactDate(s.date)}T${compactTime(end)}`;
     const uid = `cc-${s.uid || norm(s.name)}-${compactDate(s.date)}@yearupunited.org`;
-    const planOnly = !REGISTRATION_IS_OPEN && s.source !== "kickoff";
     ics +=
       "BEGIN:VEVENT\r\n" +
       `UID:${uid}\r\nDTSTAMP:${stamp}\r\n` +
       `DTSTART;TZID=America/New_York:${dtStart}\r\n` +
       `DTEND;TZID=America/New_York:${dtEnd}\r\n` +
-      `SUMMARY:${planOnly ? "[Register first] " : ""}Career Connect: ${escapeICS(s.name)}\r\n` +
+      `SUMMARY:Career Connect: ${escapeICS(s.name)}\r\n` +
       `DESCRIPTION:${escapeICS(eventDesc(s))}\r\n` +
-      `LOCATION:${escapeICS(eventLocation(s))}\r\nSTATUS:${planOnly ? "TENTATIVE" : "CONFIRMED"}\r\n` +
+      `LOCATION:${escapeICS(eventLocation(s))}\r\nSTATUS:CONFIRMED\r\n` +
       "BEGIN:VALARM\r\nTRIGGER:-P1D\r\nACTION:DISPLAY\r\n" +
       `DESCRIPTION:Reminder: you have a Career Connect workshop tomorrow — ${escapeICS(s.name)}.\r\nEND:VALARM\r\n` +
       "BEGIN:VALARM\r\nTRIGGER:-PT1H\r\nACTION:DISPLAY\r\n" +
@@ -442,7 +420,7 @@ function ProgressRing({ count, goal }) {
         </div>
         <div className="text-sm text-gray-500">
           {done
-            ? "You've planned 7+ live sessions. Anything extra is a bonus."
+            ? "You've scheduled 7+ live sessions. Anything extra is a bonus."
             : "Complete Career Connect by attending 7+ live sessions. Kickoff counts as 1 if you attend, and all workshops count too."}
         </div>
       </div>
@@ -454,7 +432,7 @@ function StepHeader({ n, title }) {
   return (
     <div className="flex items-center gap-3">
       <div className="flex gap-1.5">
-        {[1, 2, 3].map((i) => (
+        {[1, 2].map((i) => (
           <span key={i} className="h-1.5 rounded-full transition-all" style={{ width: i === n ? 28 : 12, background: i <= n ? ORANGE : "#E3E1EA" }} />
         ))}
       </div>
@@ -523,7 +501,7 @@ export default function App() {
   const hasExportable = exportList.length > 0;
 
   const downloadICS = () => {
-    track(REGISTRATION_IS_OPEN ? "download_ics_all" : "download_ics_all_planahead");
+    track("download_ics_all");
     const blob = new Blob([buildICS(exportList)], { type: "text/calendar;charset=utf-8" });
     const a = document.createElement("a");
     a.href = window.URL.createObjectURL(blob); a.download = "Career_Connect_Schedule.ics";
@@ -570,35 +548,20 @@ export default function App() {
                 single best way to make sure you actually show up.
               </p>
             </div>
-            {REGISTRATION_IS_OPEN ? (
-              <div className="rounded-xl p-5 border-2" style={{ background: "#FFFFFF", borderColor: NAVY }}>
-                <p className="text-sm leading-relaxed" style={{ color: NAVY }}>
-                  <strong>This tool does not register you for workshops.</strong> First register in the Career Connect
-                  student portal. Then use this planner to add those registered sessions to your calendar.
-                </p>
-                <a href={PORTAL_URL} target="_blank" rel="noopener noreferrer" onClick={() => track("portal_click_step0")}
-                  className="mt-3 inline-flex items-center gap-2 font-bold py-2.5 px-5 rounded-xl text-white" style={{ background: NAVY }}>
-                  Go to the student portal to register
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                </a>
-              </div>
-            ) : (
-              <div className="rounded-xl p-5 border-2" style={{ background: "#FFFFFF", borderColor: NAVY }}>
-                <p className="text-sm font-bold uppercase tracking-wider mb-1" style={{ color: ORANGE }}>
-                  Registrations will open soon
-                </p>
-                <p className="text-sm leading-relaxed" style={{ color: NAVY }}>
-                  You're officially a Career Connect student, and you can get a head start now. Pick the workshops you
-                  plan to take, put tentative holds on your calendar, and we'll remind you the moment registrations open.
-                  Holds aren't registrations; you'll still register in the portal when it opens.
-                </p>
-              </div>
-            )}
+            <div className="rounded-xl p-5 border-2" style={{ background: "#FFFFFF", borderColor: NAVY }}>
+              <p className="text-sm leading-relaxed" style={{ color: NAVY }}>
+                <strong>This tool does not register you for workshops.</strong> First register in the Career Connect
+                student portal. Then use this planner to add those registered sessions to your calendar.
+              </p>
+              <a href={PORTAL_URL} target="_blank" rel="noopener noreferrer" onClick={() => track("portal_click_step0")}
+                className="mt-3 inline-flex items-center gap-2 font-bold py-2.5 px-5 rounded-xl text-white" style={{ background: NAVY }}>
+                Go to the student portal to register
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+              </a>
+            </div>
             <div className="rounded-xl p-5 border-l-4" style={{ background: ORANGE_TINT, borderColor: ORANGE }}>
               <p className="text-sm leading-relaxed" style={{ color: NAVY }}>
-                <strong>How it works:</strong> {REGISTRATION_IS_OPEN
-                  ? "select which workshops you registered for, and we'll build the calendar invites for you in one click."
-                  : "browse the catalog, choose the workshops you plan to take, and we'll build tentative calendar holds for you."} The <strong style={{ color: ORANGE }}>6 Career Essentials (CORE)</strong> workshops
+                <strong>How it works:</strong> select which workshops you registered for, and we'll build the calendar invites for you in one click. The <strong style={{ color: ORANGE }}>6 Career Essentials (CORE)</strong> workshops
                 are the recommended path to ensure you complete the program. The <strong style={{ color: NAVY }}>6 Career Edge (BOOST)</strong> workshops
                 count toward completion too - add them to give yourself an edge, boost your chances with extra practice, get more schedule options, and stay on track.
               </p>
@@ -617,20 +580,18 @@ export default function App() {
         {/* STEP 1 — BUILD YOUR SCHEDULE */}
         {step === 1 && (
           <div className="space-y-6">
-            <StepHeader n={1} title={REGISTRATION_IS_OPEN ? "Which workshops did you register for?" : "Which workshops do you plan to take?"} />
+            <StepHeader n={1} title="Which workshops did you register for?" />
 
             <div className="space-y-5">
                 {/* Kickoff session picker — counts as 1 of 7 */}
                 <div className="bg-white rounded-2xl shadow-sm border-2 overflow-hidden" style={{ borderColor: ORANGE }}>
                   <div className="px-5 py-3 border-b border-gray-100 flex items-center gap-2" style={{ background: ORANGE_TINT }}>
                     <TrackBadge track="KICKOFF" />
-                    <span className="font-bold" style={{ color: NAVY }}>{REGISTRATION_IS_OPEN ? "Did you register for a kickoff session?" : "Which kickoff session will you attend?"}</span>
+                    <span className="font-bold" style={{ color: NAVY }}>Did you register for a kickoff session?</span>
                   </div>
                   <div className="p-4">
                     <p className="text-sm text-gray-500 mb-3">
-                      {REGISTRATION_IS_OPEN
-                        ? "Pick the kickoff session you registered for or attended - kickoff counts toward your 7+ live sessions if you attend. If you're not registered for kickoff or missed it, choose the last option."
-                        : "Pick the kickoff session you plan to attend - kickoff counts toward your 7+ live sessions if you attend. If you missed kickoff or are not attending, choose the last option."}
+                      Pick the kickoff session you registered for or attended - kickoff counts toward your 7+ live sessions if you attend. If you're not registered for kickoff or missed it, choose the last option.
                     </p>
                     <div role="radiogroup" className="grid sm:grid-cols-2 gap-x-4 gap-y-1.5">
                       {KICKOFF_SLOTS.map((sl, i) => (
@@ -650,7 +611,7 @@ export default function App() {
                 </div>
 
                 <p className="text-sm text-gray-500">
-                  Now tap each workshop you {REGISTRATION_IS_OPEN ? "registered for" : "plan to take"}, then {REGISTRATION_IS_OPEN ? "enter your session time" : "pick the session time that fits your schedule"}. The
+                  Now tap each workshop you registered for, then enter your session time. The
                   <span style={{ color: ORANGE, fontWeight: 700 }}> 6 Career Essentials (CORE)</span> workshops are the
                   recommended path; <span style={{ color: NAVY, fontWeight: 700 }}>Career Edge (BOOST)</span> workshops count too and can boost your chances with extra practice.
                 </p>
@@ -691,7 +652,7 @@ export default function App() {
                                   });
                                   return (
                                     <div>
-                                      <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">{REGISTRATION_IS_OPEN ? "Which session did you register for?" : "Which session will you attend?"}</p>
+                                      <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Which session did you register for?</p>
                                       <div className="space-y-2">
                                         {days.map((day, di) => {
                                           const dayLabel = new Date(day.date + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
@@ -721,7 +682,7 @@ export default function App() {
                                   );
                                 })() : (
                                   <div>
-                                    <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">{REGISTRATION_IS_OPEN ? "What day and time did you register for?" : "What day and time fits your schedule?"}</p>
+                                    <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">What day and time did you register for?</p>
                                     <div className="grid grid-cols-2 gap-2 max-w-xs">
                                       <input type="date" value={sess.date} min={w.monday} max={w.friday}
                                         onChange={(e) => updateSession(w.id, { date: e.target.value })}
@@ -730,7 +691,7 @@ export default function App() {
                                         onChange={(e) => updateSession(w.id, { startTime: e.target.value })}
                                         className="rounded-lg border border-gray-200 px-2 py-1.5 text-sm" />
                                     </div>
-                                    <p className="text-xs text-gray-400 mt-2">{REGISTRATION_IS_OPEN ? "Copy the exact date and time from your student portal." : "Choose the session time you plan to take."}</p>
+                                    <p className="text-xs text-gray-400 mt-2">Copy the exact date and time from your student portal.</p>
                                   </div>
                                 )}
                               </div>
@@ -746,135 +707,45 @@ export default function App() {
             <div className="flex justify-between items-center pt-2">
               <button onClick={() => setStep(0)} className="font-semibold text-gray-400 hover:text-gray-600">← Back</button>
               {(() => {
-                const canProceed = sessions.length > 0 || kickoffChoice !== null;
+                const canProceed = hasExportable && allComplete;
                 return (
                   <button onClick={() => setStep(2)} disabled={!canProceed} className={btnPrimary}
                     style={{ background: !canProceed ? "#C9C7D1" : ORANGE, color: !canProceed ? "white" : NAVY }}>
-                    Next: review {sessions.length > 0 ? `(${sessions.length})` : ""} →
+                    Add to calendar {exportList.length > 0 ? `(${exportList.length})` : ""} →
                   </button>
                 );
               })()}
             </div>
+            {!allComplete && sessions.length > 0 && (
+              <div className="rounded-xl px-4 py-3 text-sm border-2" style={{ borderColor: ORANGE, background: "#FFF7F0", color: NAVY }}>
+                <strong>Pick a date and time before continuing.</strong> Still missing: {incompleteSessions.map((s) => s.name).join(", ")}.
+              </div>
+            )}
+            {!hasExportable && (
+              <p className="text-xs text-gray-400 text-right">
+                Choose at least one kickoff or workshop session to continue.
+              </p>
+            )}
           </div>
         )}
 
-        {/* STEP 2 — REVIEW & EDIT */}
+        {/* STEP 2 — ADD TO CALENDAR */}
         {step === 2 && (
           <div className="space-y-6">
-            <StepHeader n={2} title="Review & edit" />
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"><ProgressRing count={totalCount} goal={COMPLETION_GOAL} /></div>
-
-            {/* Kickoff */}
-            <div className="rounded-2xl border-2 p-5" style={{ borderColor: ORANGE, background: ORANGE_TINT }}>
-              <div className="flex items-center gap-2"><TrackBadge track="KICKOFF" /><span className="font-bold" style={{ color: NAVY }}>Career Connect Kickoff</span></div>
-              <p className="text-sm text-gray-500 mt-1">
-                {REGISTRATION_IS_OPEN
-                  ? "Kickoff counts toward your 7+ live sessions if you attend. Pick the session you registered for or attended, or note that you're not attending."
-                  : "Kickoff counts toward your 7+ live sessions if you attend. Pick the session you plan to attend, or note that you're not attending."}
-              </p>
-              <div className="mt-3" role="radiogroup">
-                <div className="grid sm:grid-cols-2 gap-x-4 gap-y-1.5">
-                  {KICKOFF_SLOTS.map((sl, i) => (
-                    <label key={i} className="flex items-center gap-2 text-sm cursor-pointer rounded-lg px-2 py-1.5 hover:bg-white/60">
-                      <input type="radio" name="kickoff-review" checked={kickoffChoice === i}
-                        onChange={() => setKickoffChoice(i)} style={{ accentColor: ORANGE }} />
-                      <span style={{ color: NAVY }}><strong>{sl.label}</strong> · {prettyDate(sl.date)} · {pretty12h(sl.startTime)} ET</span>
-                    </label>
-                  ))}
-                  <label className="flex items-center gap-2 text-sm cursor-pointer rounded-lg px-2 py-1.5 hover:bg-white/60">
-                    <input type="radio" name="kickoff-review" checked={kickoffChoice === "none"}
-                      onChange={() => setKickoffChoice("none")} style={{ accentColor: ORANGE }} />
-                    <span className="text-gray-500">I'm not attending / I missed kickoff</span>
-                  </label>
-                </div>
-                {kickoffChoice === null && <p className="text-xs text-gray-400 mt-2">Choose a kickoff session to count it, or select the last option.</p>}
-              </div>
-            </div>
-
-            {sessions.length === 0 && (
-              <p className="text-center text-gray-500 py-6">No workshops added yet. <button onClick={() => setStep(1)} className="font-semibold" style={{ color: NAVY }}>Add some →</button></p>
-            )}
-
-            {sessions.length > 0 && (
-              <div className="rounded-xl px-4 py-3 text-sm" style={{ background: ORANGE_TINT, color: NAVY }}>
-                {REGISTRATION_IS_OPEN ? (
-                  <>We've pre-filled the <strong>Zoom link</strong> for each session you picked (you can also find these in <strong>Brightspace</strong> on your course calendar). Edit it if yours is different, or clear it to point the invite to the portal instead.</>
-                ) : (
-                  <>We've pre-filled the <strong>Zoom link</strong> for each session time you picked. Once registrations open, confirm your session in the portal and Brightspace.</>
-                )}
-              </div>
-            )}
-
-            {!allComplete && (
-              <div className="rounded-xl px-4 py-3 text-sm border-2" style={{ borderColor: ORANGE, background: "#FFF7F0", color: NAVY }}>
-                <strong>Add a date and time to every workshop before you continue.</strong> Still missing: {incompleteSessions.map((s) => s.name).join(", ")}. {REGISTRATION_IS_OPEN ? "Copy the exact date and time from your student portal." : "Use the session time you plan to attend."}
-              </div>
-            )}
-
-            {Object.keys(grouped).sort().map((wk) => (
-              <div key={wk} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="px-5 py-3 border-b border-gray-100 font-bold" style={{ color: NAVY, background: "#FBFAFC" }}>
-                  {wk === "Other" ? "Other sessions" : `Week ${wk}`}{WEEK_RANGES[wk] ? <span className="text-gray-400 font-normal ml-2">{WEEK_RANGES[wk]}</span> : null}
-                </div>
-                <div className="divide-y divide-gray-50">
-                  {grouped[wk].map((s) => {
-                    const missing = !s.date || !s.startTime;
-                    return (
-                    <div key={s.uid} className="p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <TrackBadge track={s.track} /><span className="font-bold" style={{ color: NAVY }}>{s.name}</span>
-                          {missing && <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full text-white" style={{ background: ORANGE }}>Needs date &amp; time</span>}
-                        </div>
-                        <button onClick={() => removeSession(s.uid)} className="text-gray-300 hover:text-red-500 text-sm font-semibold">Remove</button>
-                      </div>
-                      <div className="mt-3 grid sm:grid-cols-3 gap-2">
-                        <input type="date" value={s.date} min={s.minDate} max={s.maxDate} onChange={(e) => updateSession(s.uid, { date: e.target.value })} className="rounded-lg border px-2 py-1.5 text-sm" style={{ borderColor: !s.date ? ORANGE : "#E5E7EB" }} />
-                        <input type="time" value={s.startTime} onChange={(e) => updateSession(s.uid, { startTime: e.target.value })} className="rounded-lg border px-2 py-1.5 text-sm" style={{ borderColor: !s.startTime ? ORANGE : "#E5E7EB" }} />
-                        <input type="text" value={s.joinLink} placeholder="Paste Zoom / join link (optional)" onChange={(e) => updateSession(s.uid, { joinLink: e.target.value })} className="rounded-lg border border-gray-200 px-2 py-1.5 text-sm" />
-                      </div>
-                      {missing && <p className="text-xs mt-2" style={{ color: ORANGE }}>{REGISTRATION_IS_OPEN ? "Copy the exact date and time from your student portal." : "Use the session time you plan to attend."}</p>}
-                    </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-
-            <div className="flex justify-between items-center pt-2">
-              <button onClick={() => setStep(1)} className="font-semibold text-gray-400 hover:text-gray-600">← Add more</button>
-              {(() => {
-                const blocked = !allComplete || !hasExportable;
-                return (
-                  <button onClick={() => setStep(3)} disabled={blocked} className={btnPrimary}
-                    style={{ background: blocked ? "#C9C7D1" : ORANGE, color: blocked ? "white" : NAVY }}>
-                    Add to my calendar →
-                  </button>
-                );
-              })()}
-            </div>
-          </div>
-        )}
-
-        {/* STEP 3 — ADD TO CALENDAR */}
-        {step === 3 && (
-          <div className="space-y-6">
-            <StepHeader n={3} title="Add to calendar" />
+            <StepHeader n={2} title="Add to calendar" />
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"><ProgressRing count={totalCount} goal={COMPLETION_GOAL} /></div>
 
             <div className="rounded-2xl p-6 text-white" style={{ background: NAVY }}>
               <h3 className="font-extrabold text-lg">Get everything in one tap</h3>
               <p className="text-white/80 text-sm mt-1 mb-4">
-                {REGISTRATION_IS_OPEN
-                  ? "Your calendar invite will save the session time and reminders (1 day and 1 hour before). If you pasted a Zoom link, it will include that link too. If not, the invite will point you back to the student portal and Brightspace."
-                  : `Your kickoff invite is ready to go. Your workshop picks export as tentative holds marked "Register first." We'll remind you the moment registrations open. Once you've registered, come back here to refresh your invites with your confirmed sessions.`}
+                Your calendar invite will save the session time and reminders (1 day and 1 hour before). If you pasted a Zoom link, it will include that link too. If not, the invite will point you back to the student portal and Brightspace.
               </p>
               <button onClick={downloadICS} disabled={!hasExportable} className="font-bold py-3 px-6 rounded-xl inline-flex items-center gap-2"
                 style={{ background: hasExportable ? ORANGE : "#6B6480", color: hasExportable ? NAVY : "rgba(255,255,255,0.7)" }}>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                 Download .ics (all sessions)
               </button>
-              {!hasExportable && <p className="text-white/70 text-xs mt-3">Add at least one session with a date and time first — go back to review.</p>}
+              {!hasExportable && <p className="text-white/70 text-xs mt-3">Add at least one session with a date and time first.</p>}
               <p className="text-white/60 text-xs mt-3">Best for Apple Calendar / phone. Using Google or Outlook on the web? Use the per-session buttons below.</p>
             </div>
 
@@ -914,21 +785,21 @@ export default function App() {
               <div className="rounded-2xl p-6 border-2" style={{ background: ORANGE_TINT, borderColor: ORANGE }}>
                 <h3 className="font-extrabold text-lg" style={{ color: NAVY }}>You're not quite at 7 yet</h3>
                 <p className="text-sm leading-relaxed mt-2" style={{ color: NAVY }}>
-                  You've planned <strong>{totalCount}</strong> of the <strong>7+ live sessions</strong> needed to complete
-                  Career Connect. Kickoff counts as 1 if you attend, and all workshops count too. {REGISTRATION_IS_OPEN ? "Register for and attend" : "Plan to attend"}
+                  You've scheduled <strong>{totalCount}</strong> of the <strong>7+ live sessions</strong> needed to complete
+                  Career Connect. Kickoff counts as 1 if you attend, and all workshops count too. Register for and attend
                   at least <strong>{COMPLETION_GOAL - totalCount}</strong> more {COMPLETION_GOAL - totalCount === 1 ? "session" : "sessions"} to
                   finish and unlock 8 additional weeks of individualized career and job placement support.
                 </p>
-                <a href={REGISTRATION_IS_OPEN ? PORTAL_URL : CATALOG_PATH} target="_blank" rel="noopener noreferrer"
+                <a href={PORTAL_URL} target="_blank" rel="noopener noreferrer"
                   className="mt-4 inline-flex items-center gap-2 font-bold py-3 px-6 rounded-xl text-white" style={{ background: NAVY }}>
-                  {REGISTRATION_IS_OPEN ? "Go to the student portal" : "Browse the workshop catalog"}
+                  Go to the student portal
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                 </a>
-                <p className="text-xs text-gray-500 mt-3">{REGISTRATION_IS_OPEN ? "Your invites above are ready to add now - then come back and register for the rest." : "Your tentative holds above are ready to add now - then come back once registrations open."}</p>
+                <p className="text-xs text-gray-500 mt-3">Your invites above are ready to add now - then come back and register for the rest.</p>
               </div>
             )}
 
-            <div className="flex justify-start pt-2"><button onClick={() => setStep(2)} className="font-semibold text-gray-400 hover:text-gray-600">← Back to review</button></div>
+            <div className="flex justify-start pt-2"><button onClick={() => setStep(1)} className="font-semibold text-gray-400 hover:text-gray-600">← Back to selections</button></div>
           </div>
         )}
       </main>

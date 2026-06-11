@@ -11,8 +11,9 @@
 
 [[redirects]]
   from = "/guide-pre-registration"
-  to = "/guide-pre-registration.html"
-  status = 200
+  to = "/guide-registration-open"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/guide-registration-open"
@@ -26,8 +27,9 @@
 
 [[redirects]]
   from = "/catalog-pre-registration"
-  to = "/catalog-pre-registration.html"
-  status = 200
+  to = "/catalog-registration-open"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/catalog-registration-open"
@@ -41,8 +43,9 @@
 
 [[redirects]]
   from = "/pre-registration"
-  to = "/index.html"
-  status = 200
+  to = "/registration-open"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/registration-open"

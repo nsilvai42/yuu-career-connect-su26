@@ -1,14 +1,14 @@
-<!doctype html><html><head><meta charset="utf-8"><title>Career Connect Workshop Catalog · Pre-registration · Year Up United</title><meta name="viewport" content="width=816"><meta name="robots" content="noindex, nofollow">
+<!doctype html><html><head><meta charset="utf-8"><title>Career Connect Workshop Catalog · Year Up United</title><meta name="viewport" content="width=816"><meta name="robots" content="noindex, nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <!-- Microsoft Clarity — pilot analytics -->
 <script type="text/javascript">
 (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
 t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
 y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","x4micnma0k");
 </script><style>
-:root{--navy:#170055;--orange:#FE6500;--blue:#008AFF;--violet:#7C5CFF;--lav:#F1EEFA;--peach:#FFF1E8;--peachbd:#FBD9C0;}
+:root{--navy:#170055;--orange:#FE6500;--blue:#008AFF;--violet:#7C5CFF;--lav:#F1EEFA;--peach:#FFF1E8;--peachbd:#FBD9C0;--corepanel:#EAF4FF;}
 @page{size:8.5in 11in;margin:0;}
 *{box-sizing:border-box;}
-body{margin:0;font-family:"Poppins","DejaVu Sans",Arial,sans-serif;color:#2b1a5e;font-size:10pt;line-height:1.35;background:white;}
+body{margin:0;font-family:"Montserrat","DejaVu Sans",Arial,sans-serif;color:#2b1a5e;font-size:10pt;line-height:1.35;background:white;}
 a{color:inherit;text-decoration:none;}
 .page{width:8.5in;height:11in;overflow:hidden;page-break-after:always;position:relative;background:#fff;}
 @media screen{
@@ -43,13 +43,19 @@ h1{color:var(--navy);font-size:30pt;line-height:1.02;margin:0 0 8px;font-weight:
 .pr b{color:var(--orange);}
 .split{display:flex;gap:12px;margin-top:10px;}
 .box{flex:1;border-radius:16px;padding:13px 15px;}
-.box.core{background:var(--navy);color:white;}
-.box.boost{background:var(--peach);border:1.5px solid var(--peachbd);}
+.box.core{background:#fff;border:1.5px solid #e2dcef;border-top:4px solid var(--orange);color:#2b1a5e;}
+.box.boost{background:var(--peach);border:1.5px solid var(--peachbd);border-top:4px solid var(--violet);}
 .boxt{font-weight:800;font-size:12pt;margin-bottom:5px;color:inherit;}
-.box.core .boxt{color:white;}
+.box.core .boxt{color:var(--navy);}
 .box.boost .boxt{color:var(--navy);}
 .boxp{font-size:8.4pt;line-height:1.34;margin:0 0 8px;color:#e4dcff;}
 .box.boost .boxp{color:#5a4a86;}
+.box.core .boxp{color:#5a4a86;}
+.box.core .smallwk{color:#6b55bd;}
+.reqbadge{display:inline-block;font-size:6.6pt;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#993C1D;background:#FAECE7;border:1px solid #F0997B;border-radius:5px;padding:2px 6px;margin-left:7px;vertical-align:1.5px;}
+.optbadge{display:inline-block;font-size:6.6pt;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#3C3489;background:#EEEDFE;border:1px solid #AFA9EC;border-radius:5px;padding:2px 6px;margin-left:7px;vertical-align:1.5px;}
+.cta{display:flex;align-items:center;gap:9px;background:var(--orange);color:#fff;border-radius:12px;padding:11px 16px;font-weight:800;font-size:10.2pt;margin:0 0 13px;text-decoration:none;}
+.cta .arr{margin-left:auto;}
 .listitem{display:flex;gap:7px;align-items:flex-start;margin:5px 0;font-size:8.0pt;line-height:1.18;}
 .dot{flex:0 0 14px;height:14px;border-radius:4px;background:var(--orange);color:white;font-size:9px;font-weight:800;text-align:center;line-height:14px;margin-top:1px;}
 .box.boost .dot{background:var(--violet);color:white;}
@@ -66,19 +72,21 @@ h1{color:var(--navy);font-size:30pt;line-height:1.02;margin:0 0 8px;font-weight:
 .wkband{background:var(--navy);border-radius:12px;color:white;padding:8px 13px;margin:0 0 8px;display:flex;justify-content:space-between;align-items:baseline;}
 .wkband span{color:#b4a1ff;text-transform:uppercase;font-weight:800;font-size:8.2pt;letter-spacing:.04em;}
 .wkband b{font-size:10.8pt;}
-.week{margin-bottom:11px;}
-.cards{display:flex;gap:10px;}
-.wcard{flex:1;background:white;border:1.5px solid #e2dcef;border-radius:14px;padding:11px 12px 10px;}
-.wcard.core{border-top:4px solid var(--orange);}
-.wcard.boost{border-top:4px solid var(--violet);}
-.wtop{display:flex;justify-content:space-between;gap:8px;margin-bottom:5px;}
+.week{margin-bottom:12px;}
+.cards{display:flex;gap:10px;align-items:stretch;}
+.wcard{position:relative;flex:1;display:flex;flex-direction:column;background:linear-gradient(180deg,#fff 0,#fffcfb 100%);border:1.5px solid #e2dcef;border-radius:14px;padding:11px 12px 10px;min-height:1.62in;box-shadow:0 5px 14px rgba(23,0,85,.045);}
+.wcard.core{border-top:5px solid var(--orange);}
+.wcard.boost{border-top:5px solid var(--violet);background:linear-gradient(180deg,#fff 0,#fbf9ff 100%);}
+.wtop{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;min-height:.45in;}
 .wname{font-weight:800;color:var(--navy);font-size:10.7pt;line-height:1.08;}
 .whead{font-weight:800;font-size:8.9pt;color:var(--orange);margin-top:2px;}
 .wcard.boost .whead{color:#5b48a8;}
 .badgewrap{text-align:right;min-width:.75in;}
-.wblurb{font-size:8.08pt;color:#5a4a86;line-height:1.28;margin:0 0 7px;}
-.why{background:var(--peach);border-radius:9px;padding:6px 8px;font-size:7.9pt;color:var(--navy);line-height:1.22;}
-.why b{color:var(--orange);text-transform:uppercase;letter-spacing:.04em;font-size:7pt;}
+.wblurb{font-size:8.15pt;color:#4f4374;line-height:1.3;margin:0 0 7px;background:#fbf9ff;border:1px solid #eee9fb;border-radius:9px;padding:6px 8px;}
+.why{margin-top:auto;background:var(--corepanel);border-left:4px solid var(--blue);border-radius:9px;padding:6px 8px;font-size:7.9pt;color:var(--navy);line-height:1.22;}
+.wcard.boost .why{background:var(--peach);border-left-color:var(--violet);}
+.why b{color:var(--blue);text-transform:uppercase;letter-spacing:.04em;font-size:7pt;}
+.wcard.boost .why b{color:var(--violet);}
 .regbox{background:var(--navy);border-radius:16px;padding:13px 16px;color:white;margin-top:8px;}
 .regbox .rt{font-weight:800;font-size:12pt;margin-bottom:4px;}
 .regbox p{font-size:8.7pt;line-height:1.36;margin:0 0 8px;color:#e4dcff;}
@@ -91,20 +99,16 @@ h1{color:var(--navy);font-size:30pt;line-height:1.02;margin:0 0 8px;font-weight:
 <div class="page"><div class="pad">
   <div class="eyebrow">Career Connect · Workshop Catalog</div>
   <h1>Choose your workshops</h1><div class="rule"></div>
-  <p class="lead">Start with the 6 Career Essentials (<b style="color:#FE6500">CORE</b>). Add Career Edge (<b style="color:#7C5CFF">BOOST</b>) workshops if you want more practice, need one more session, or want to attend all 12.</p>
+  <p class="lead"><b style="color:#170055">Aim to attend all 12 workshops.</b> If you can&rsquo;t make them all, prioritize the <b style="color:#FE6500">Career Essentials (CORE)</b> over <b style="color:#7C5CFF">Career Edge (BOOST)</b> &mdash; and at minimum, attend <b style="color:#170055">every Essential</b>. Those are what you need to complete Career Connect.</p>
+  <a class="cta" href="/portal" target="_blank" rel="noopener noreferrer">Registration is open &mdash; register in the student portal<span class="arr">&rarr;</span></a>
   <div class="facts">
-    <div class="fact"><div class="fh">Your goal</div><div class="fp">Attend <b>7+ live sessions</b> to complete Career Connect and unlock 8 weeks of job placement support.</div></div>
+    <div class="fact"><div class="fh">Your goal</div><div class="fp">Attend <b>7+ live sessions</b> to complete &mdash; kickoff counts as session 1.</div></div>
     <div class="fact"><div class="fh">Your commitment</div><div class="fp">Plan for <b>1-2 hours each week</b> for 6 weeks.</div></div>
-    <div class="fact"><div class="fh">Your reward</div><div class="fp">Get <b>8 more weeks</b> of personalized coaching and hands-on job search support.</div></div>
-  </div>
-  <div class="ptbl"><div class="pth">Which path are you on?</div>
-    <div class="ptr"><div class="pl">I attended kickoff</div><div class="pr">Start with the 6 Career Essentials (<b>CORE</b>).</div></div>
-    <div class="ptr"><div class="pl">I missed kickoff</div><div class="pr">Take the 6 Career Essentials (<b>CORE</b>) <b>+ 1 Career Edge (BOOST)</b>.</div></div>
-    <div class="ptr"><div class="pl">I want the most value</div><div class="pr">Plan for <b>all 12 workshops</b>: CORE plus BOOST.</div></div>
+    <div class="fact"><div class="fh">Your reward</div><div class="fp">Get <b>8 more weeks</b> of 1:1 coaching, resume reviews, and interview prep.</div></div>
   </div>
   <div class="split">
-    <div class="box core"><div class="boxt">Career Essentials (CORE)</div><p class="boxp">Start here. If you attended kickoff, these six workshops get you to 7 live sessions.</p><div class="listitem"><span class="dot">✓</span><span>Setting Success Goals <span class="smallwk">· Wk 2</span></span></div><div class="listitem"><span class="dot">✓</span><span>AI in the Workplace <span class="smallwk">· Wk 3</span></span></div><div class="listitem"><span class="dot">✓</span><span>Professional Development <span class="smallwk">· Wk 4</span></span></div><div class="listitem"><span class="dot">✓</span><span>Crafting a Strong Resume <span class="smallwk">· Wk 5</span></span></div><div class="listitem"><span class="dot">✓</span><span>Building a Professional LinkedIn <span class="smallwk">· Wk 5</span></span></div><div class="listitem"><span class="dot">✓</span><span>Interview Workshop <span class="smallwk">· Wk 6</span></span></div></div>
-    <div class="box boost"><div class="boxt">Career Edge (BOOST)</div><p class="boxp">These count too. Add them for more practice and more schedule options.</p><div class="listitem"><span class="dot">↗</span><span>Building Your Confidence <span class="smallwk">· Wk 1</span></span></div><div class="listitem"><span class="dot">↗</span><span>Owning Your Role <span class="smallwk">· Wk 1</span></span></div><div class="listitem"><span class="dot">↗</span><span>Building Strong Work Relationships <span class="smallwk">· Wk 2</span></span></div><div class="listitem"><span class="dot">↗</span><span>Fostering Inclusion <span class="smallwk">· Wk 3</span></span></div><div class="listitem"><span class="dot">↗</span><span>Unlocking a Growth Mindset <span class="smallwk">· Wk 4</span></span></div><div class="listitem"><span class="dot">↗</span><span>Creating Balance <span class="smallwk">· Wk 6</span></span></div></div>
+    <div class="box core"><div class="boxt">Career Essentials (CORE)<span class="reqbadge">Required</span></div><p class="boxp">Attend all six to complete. With kickoff, that&rsquo;s your 7 live sessions.</p><div class="listitem"><span class="dot">✓</span><span>Setting Success Goals <span class="smallwk">· Wk 2</span></span></div><div class="listitem"><span class="dot">✓</span><span>AI in the Workplace <span class="smallwk">· Wk 3</span></span></div><div class="listitem"><span class="dot">✓</span><span>Professional Development <span class="smallwk">· Wk 4</span></span></div><div class="listitem"><span class="dot">✓</span><span>Crafting a Strong Resume <span class="smallwk">· Wk 5</span></span></div><div class="listitem"><span class="dot">✓</span><span>Building a Professional LinkedIn <span class="smallwk">· Wk 5</span></span></div><div class="listitem"><span class="dot">✓</span><span>Interview Workshop <span class="smallwk">· Wk 6</span></span></div></div>
+    <div class="box boost"><div class="boxt">Career Edge (BOOST)<span class="optbadge">Bonus</span></div><p class="boxp">Attend these too if you can &mdash; great extra practice. Missed kickoff? One BOOST gets you back to 7.</p><div class="listitem"><span class="dot">↗</span><span>Building Your Confidence <span class="smallwk">· Wk 1</span></span></div><div class="listitem"><span class="dot">↗</span><span>Owning Your Role <span class="smallwk">· Wk 1</span></span></div><div class="listitem"><span class="dot">↗</span><span>Managing Your Manager <span class="smallwk">· Wk 2</span></span></div><div class="listitem"><span class="dot">↗</span><span>Fostering Inclusion <span class="smallwk">· Wk 3</span></span></div><div class="listitem"><span class="dot">↗</span><span>Unlocking a Growth Mindset <span class="smallwk">· Wk 4</span></span></div><div class="listitem"><span class="dot">↗</span><span>Creating Balance <span class="smallwk">· Wk 6</span></span></div></div>
   </div>
 </div><div class="foot"><span>Career Connect · <b>Workshop Catalog</b></span><span>1</span></div></div>
 
@@ -118,14 +122,14 @@ h1{color:var(--navy);font-size:30pt;line-height:1.02;margin:0 0 8px;font-weight:
       <div class="cards">
       <div class="wcard boost">
         <div class="wtop"><div><div class="wname">Building Your Confidence</div><div class="whead">Build Your Confidence, Unlock Your Potential</div></div><div class="badgewrap"><span class="tag boost">BOOST</span><span class="tagtext">Career Edge</span></div></div>
-        <p class="wblurb">Practice ways to build confidence, speak up, and handle setbacks.</p>
-        <div class="why"><b>Career Edge boost</b><br>Speak up and recover from setbacks.</div>
+        <p class="wblurb">Build confidence, step outside your comfort zone, and recover from setbacks.</p>
+        <div class="why"><b>Use this to</b><br>Advocate for yourself with more confidence.</div>
       </div>
 
       <div class="wcard boost">
         <div class="wtop"><div><div class="wname">Owning Your Role</div><div class="whead">Own Your Role, Strengthen Your Team</div></div><div class="badgewrap"><span class="tag boost">BOOST</span><span class="tagtext">Career Edge</span></div></div>
-        <p class="wblurb">Practice accountability, communication, and teamwork so others can count on you.</p>
-        <div class="why"><b>Career Edge boost</b><br>Build trust as a teammate.</div>
+        <p class="wblurb">Practice ownership, communication, and collaboration so your team can count on you.</p>
+        <div class="why"><b>Use this to</b><br>Build trust as a dependable teammate.</div>
       </div></div>
     </section>
 
@@ -134,14 +138,14 @@ h1{color:var(--navy);font-size:30pt;line-height:1.02;margin:0 0 8px;font-weight:
       <div class="cards">
       <div class="wcard core">
         <div class="wtop"><div><div class="wname">Setting Success Goals</div><div class="whead">Set Goals That Drive Your Success</div></div><div class="badgewrap"><span class="tag core">CORE</span><span class="tagtext">Career Essentials</span></div></div>
-        <p class="wblurb">Use the SMART goal framework to set clear goals and plan your next steps.</p>
-        <div class="why"><b>Why it matters</b><br>A clear plan keeps you moving.</div>
+        <p class="wblurb">Use SMART goals to set clear targets, stay motivated, and plan around obstacles.</p>
+        <div class="why"><b>Use this to</b><br>Turn a big goal into next steps.</div>
       </div>
 
       <div class="wcard boost">
-        <div class="wtop"><div><div class="wname">Building Strong Work Relationships</div><div class="whead">Build Strong Relationships With Your Manager</div></div><div class="badgewrap"><span class="tag boost">BOOST</span><span class="tagtext">Career Edge</span></div></div>
-        <p class="wblurb">Learn how to manage up: understand expectations, communicate clearly, and build trust with your manager.</p>
-        <div class="why"><b>Career Edge boost</b><br>Build stronger manager relationships.</div>
+        <div class="wtop"><div><div class="wname">Managing Your Manager</div><div class="whead">Build Strong Relationships With Your Manager</div></div><div class="badgewrap"><span class="tag boost">BOOST</span><span class="tagtext">Career Edge</span></div></div>
+        <p class="wblurb">Manage up: clarify expectations, communicate well, and support your manager's goals.</p>
+        <div class="why"><b>Use this to</b><br>Build stronger manager relationships.</div>
       </div></div>
     </section>
 </div><div class="foot"><span>Career Connect · <b>Workshop Catalog</b></span><span>2</span></div></div>
@@ -150,18 +154,18 @@ h1{color:var(--navy);font-size:30pt;line-height:1.02;margin:0 0 8px;font-weight:
   <div class="eyebrow">What you'll learn</div><h1>Build skills employers notice</h1><div class="rule"></div>
 
     <section class="week">
-      <div class="wkband"><span>Week 3 · Jul 6-10</span><b>Culture &amp; Belonging and AI in the Workplace</b></div>
+      <div class="wkband"><span>Week 3 · Jul 6-10</span><b>Belonging &amp; AI at work</b></div>
       <div class="cards">
       <div class="wcard boost">
         <div class="wtop"><div><div class="wname">Fostering Inclusion</div><div class="whead">Foster Inclusion and Belonging</div></div><div class="badgewrap"><span class="tag boost">BOOST</span><span class="tagtext">Career Edge</span></div></div>
-        <p class="wblurb">Explore bias, privilege, and discrimination, and practice ways to support equity and belonging.</p>
-        <div class="why"><b>Career Edge boost</b><br>Help build healthier teams.</div>
+        <p class="wblurb">Spot bias and practice concrete ways to support equity and belonging.</p>
+        <div class="why"><b>Use this to</b><br>Help build healthier teams.</div>
       </div>
 
       <div class="wcard core">
         <div class="wtop"><div><div class="wname">AI in the Workplace</div><div class="whead">Understanding AI’s Place in the Workplace</div></div><div class="badgewrap"><span class="tag core">CORE</span><span class="tagtext">Career Essentials</span></div></div>
-        <p class="wblurb">Build a foundation in AI, generative AI, prompts, checking outputs, and ethical use at work.</p>
-        <div class="why"><b>Why it matters</b><br>AI is becoming part of workplace readiness.</div>
+        <p class="wblurb">Learn AI basics, prompt writing, output checks, and ethical use at work.</p>
+        <div class="why"><b>Use this to</b><br>Use AI more carefully at work.</div>
       </div></div>
     </section>
 
@@ -170,14 +174,14 @@ h1{color:var(--navy);font-size:30pt;line-height:1.02;margin:0 0 8px;font-weight:
       <div class="cards">
       <div class="wcard boost">
         <div class="wtop"><div><div class="wname">Unlocking a Growth Mindset</div><div class="whead">Unlock Your Potential With a Growth Mindset</div></div><div class="badgewrap"><span class="tag boost">BOOST</span><span class="tagtext">Career Edge</span></div></div>
-        <p class="wblurb">Practice shifting negative self-talk and using challenges as chances to grow.</p>
-        <div class="why"><b>Career Edge boost</b><br>Use feedback and setbacks to keep growing.</div>
+        <p class="wblurb">Shift negative self-talk, handle feedback, and turn challenges into growth.</p>
+        <div class="why"><b>Use this to</b><br>Keep going when work gets hard.</div>
       </div>
 
       <div class="wcard core">
         <div class="wtop"><div><div class="wname">Professional Development</div><div class="whead">Plan Your Career With Confidence</div></div><div class="badgewrap"><span class="tag core">CORE</span><span class="tagtext">Career Essentials</span></div></div>
-        <p class="wblurb">Research job-market trends, look at your strengths and gaps, and choose your next steps.</p>
-        <div class="why"><b>Why it matters</b><br>Know what to build next.</div>
+        <p class="wblurb">Research career options, map your strengths and gaps, and choose your next steps.</p>
+        <div class="why"><b>Use this to</b><br>Know what to build next.</div>
       </div></div>
     </section>
 </div><div class="foot"><span>Career Connect · <b>Workshop Catalog</b></span><span>3</span></div></div>
@@ -190,14 +194,14 @@ h1{color:var(--navy);font-size:30pt;line-height:1.02;margin:0 0 8px;font-weight:
       <div class="cards">
       <div class="wcard core">
         <div class="wtop"><div><div class="wname">Crafting a Strong Resume</div><div class="whead">Craft a Resume That Stands Out</div></div><div class="badgewrap"><span class="tag core">CORE</span><span class="tagtext">Career Essentials</span></div></div>
-        <p class="wblurb">Build a resume that highlights your skills and experience with clear, strong statements.</p>
-        <div class="why"><b>Why it matters</b><br>Show employers what you bring.</div>
+        <p class="wblurb">Write stronger resume statements that show your skills and accomplishments.</p>
+        <div class="why"><b>Use this to</b><br>Show employers what you bring.</div>
       </div>
 
       <div class="wcard core">
         <div class="wtop"><div><div class="wname">Building a Professional LinkedIn</div><div class="whead">Build a Professional Online Presence</div></div><div class="badgewrap"><span class="tag core">CORE</span><span class="tagtext">Career Essentials</span></div></div>
-        <p class="wblurb">Clean up your digital footprint and build a LinkedIn profile that helps you connect with opportunities.</p>
-        <div class="why"><b>Why it matters</b><br>Make your professional brand easier to understand.</div>
+        <p class="wblurb">Shape your digital footprint and build a LinkedIn profile that opens doors.</p>
+        <div class="why"><b>Use this to</b><br>Make your professional brand clear.</div>
       </div></div>
     </section>
 
@@ -206,16 +210,16 @@ h1{color:var(--navy);font-size:30pt;line-height:1.02;margin:0 0 8px;font-weight:
       <div class="cards">
       <div class="wcard boost">
         <div class="wtop"><div><div class="wname">Creating Balance</div><div class="whead">Create Balance, Reduce Stress</div></div><div class="badgewrap"><span class="tag boost">BOOST</span><span class="tagtext">Career Edge</span></div></div>
-        <p class="wblurb">Practice self-care strategies, manage stressors, and set boundaries that support your well-being.</p>
-        <div class="why"><b>Career Edge boost</b><br>Stay consistent when life gets busy.</div>
+        <p class="wblurb">Set boundaries, manage stressors, and build habits that protect your well-being.</p>
+        <div class="why"><b>Use this to</b><br>Stay consistent when life gets busy.</div>
       </div>
 
       <div class="wcard core">
         <div class="wtop"><div><div class="wname">Interview Workshop</div><div class="whead">Get Ready for a Strong Interview</div></div><div class="badgewrap"><span class="tag core">CORE</span><span class="tagtext">Career Essentials</span></div></div>
-        <p class="wblurb">Prepare for interviews, practice common questions, and use the STAR Method for stronger answers.</p>
-        <div class="why"><b>Why it matters</b><br>Turn your experience into a clear story.</div>
+        <p class="wblurb">Prepare strong answers, practice common questions, and use the STAR Method.</p>
+        <div class="why"><b>Use this to</b><br>Turn your experience into a clear story.</div>
       </div></div>
     </section>
-  <div class="regbox"><div class="rt">Registrations will open soon</div><p>Pick your workshops now. Start with the 6 Career Essentials (CORE). If you missed kickoff, add at least 1 Career Edge (BOOST) workshop too. Then use the <a href="/pre-registration" target="_blank" rel="noopener noreferrer" style="color:inherit;font-weight:600;">calendar planner</a> to hold your picks. Need the full overview? Open the <a href="/guide-pre-registration" target="_blank" rel="noopener noreferrer" style="color:inherit;font-weight:600;">Career Connect Guide</a>.</p><div class="steps"><div class="step"><b>Step 1</b>Browse the catalog</div><div class="step"><b>Step 2</b>Start with CORE</div><div class="step"><b>Step 3</b>Add BOOST if helpful</div><div class="step"><b>Step 4</b>Plan on your calendar</div></div></div>
+  <div class="regbox"><div class="rt">Ready to register?</div><p>Open the <a href="/portal" target="_blank" rel="noopener noreferrer" style="color:#FFB37A;font-weight:700;text-decoration:underline;">student portal</a> and register. Aim to attend all 12 &mdash; at minimum, register for all 6 Career Essentials (CORE), since those are required to complete. Then add your sessions to <a href="/registration-open" target="_blank" rel="noopener noreferrer" style="color:#FFB37A;font-weight:700;text-decoration:underline;">your planner</a>. Need the full overview? Open the <a href="/guide-registration-open" target="_blank" rel="noopener noreferrer" style="color:#FFB37A;font-weight:700;text-decoration:underline;">Career Connect Guide</a>.</p><div class="steps"><div class="step"><b>Step 1</b>Open the portal</div><div class="step"><b>Step 2</b>Register for all 6 CORE</div><div class="step"><b>Step 3</b>Add BOOST sessions too</div><div class="step"><b>Step 4</b>Add sessions to your planner</div></div></div>
 </div><div class="foot"><span>Career Connect · <b>Workshop Catalog</b></span><span>4</span></div></div>
 <a href="/privacy" target="_blank" rel="noopener noreferrer" style="position:fixed;right:10px;bottom:8px;z-index:9999;font:600 11px Figtree,system-ui,sans-serif;color:#6b6986;background:rgba(255,255,255,.85);padding:3px 8px;border-radius:6px;text-decoration:none;">Privacy notice</a><style>@media print{a[href="/privacy"]{display:none!important}}</style></body></html>
