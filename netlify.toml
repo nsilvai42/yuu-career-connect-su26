@@ -3,38 +3,66 @@
   command = "npm run build"
   publish = "dist"
 
-# Pretty URLs for the static pages
+# Pretty URLs for the React planner, guide, and catalog
 [[redirects]]
   from = "/guide"
-  to = "/guide.html"
+  to = "/index.html"
   status = 200
+  force = true
+
+[[redirects]]
+  from = "/guide/"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/guide.html"
+  to = "/guide/"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/guide-pre-registration"
-  to = "/guide-registration-open"
+  to = "/guide"
   status = 301
   force = true
 
 [[redirects]]
   from = "/guide-registration-open"
-  to = "/guide-registration-open.html"
-  status = 200
+  to = "/guide"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/catalog"
-  to = "/catalog.html"
+  to = "/index.html"
   status = 200
+  force = true
+
+[[redirects]]
+  from = "/catalog/"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/catalog.html"
+  to = "/catalog/"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/catalog-pre-registration"
-  to = "/catalog-registration-open"
+  to = "/catalog"
   status = 301
   force = true
 
 [[redirects]]
   from = "/catalog-registration-open"
-  to = "/catalog-registration-open.html"
-  status = 200
+  to = "/catalog"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/privacy"
@@ -60,7 +88,7 @@
 # Stable owned shortlink for the external student portal (updatable in one place)
 [[redirects]]
   from = "/portal"
-  to = "https://yuprogram.my.site.com/CareerConnect/"
+  to = "https://yuprogram.my.site.com/CareerConnect/login"
   status = 301
   force = true
 

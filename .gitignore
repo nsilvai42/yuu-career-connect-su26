@@ -4,3 +4,14 @@ dist/
 .DS_Store
 /guide-p*.png
 /catalog-*.png
+
+# Local tooling / agent state
+.netlify/
+.claude/
+
+# Working scratch & review artifacts (not part of the canonical site)
+tmp/
+backups/
+/catalog-full.jpeg
+/guide-full.jpeg
+public/assets/review-*.png
