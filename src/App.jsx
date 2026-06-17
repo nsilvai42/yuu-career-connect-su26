@@ -614,6 +614,13 @@ const routePath = () => {
   return window.location.pathname.replace(/\/+$/, "") || "/";
 };
 
+const weekParam = () => {
+  if (typeof window === "undefined") return null;
+  const rawWeek = new URLSearchParams(window.location.search).get("week");
+  const week = Number(rawWeek);
+  return Number.isInteger(week) && week >= 1 && week <= 6 ? week : null;
+};
+
 const getWorkshopsForWeek = (week) => WORKSHOPS.filter((w) => w.week === week);
 
 const workshopCopy = (name) => WORKSHOP_COPY[name] || {
@@ -1200,8 +1207,10 @@ function CatalogPage() {
 
 /* ----------------------------------- APP ----------------------------------- */
 export default function App() {
-  const [view, setView] = useState("welcome");     // welcome | select | plan
-  const [cursor, setCursor] = useState(0);          // 0 = kickoff, 1..6 = week
+  const scopedWeek = useMemo(() => weekParam(), []);
+  const weekScopedMode = scopedWeek !== null;
+  const [view, setView] = useState(weekScopedMode ? "select" : "welcome"); // welcome | select | plan
+  const [cursor, setCursor] = useState(weekScopedMode ? scopedWeek : 0);    // 0 = kickoff, 1..6 = week
   const [sessions, setSessions] = useState([]);
   const [kickoffChoice, setKickoffChoice] = useState(null); // null | "none" | number
   const [kickoffYes, setKickoffYes] = useState(null);       // null | true | false
@@ -1229,8 +1238,8 @@ export default function App() {
       return;
     }
     document.title = "Career Connect Workshop Calendar · Year Up United";
-    track(view === "select" ? `select_${cursor}` : view);
-  }, [view, cursor, currentPath]);
+    track(weekScopedMode && view === "select" ? `week_shortcut_${cursor}` : view === "select" ? `select_${cursor}` : view);
+  }, [view, cursor, currentPath, weekScopedMode]);
 
   const scheduledCount = sessions.filter((s) => s.date && s.startTime).length;
   const kickoffCounts = typeof kickoffChoice === "number";
@@ -1311,6 +1320,17 @@ export default function App() {
         setError("Pick the kickoff session you registered for, or choose “No / I missed it.”"); return;
       }
       if (cursor >= 1 && weekIncomplete(cursor)) { setError("Pick a session time before continuing."); return; }
+      if (weekScopedMode && cursor >= 1) {
+        if (!sessions.some((s) => s.week === cursor)) {
+          setError("Choose the Week " + cursor + " workshop(s) you registered for before reviewing your invite.");
+          return;
+        }
+        if (!allComplete) { setError("Finish setting times for: " + incompleteSessions.map((s) => s.name).join(", ") + "."); return; }
+        setError("");
+        setPlanConfirmed(false);
+        setView("plan");
+        return;
+      }
       setError("");
       if (cursor < 6) { setCursor(cursor + 1); return; }
       if (!allComplete) { setError("Finish setting times for: " + incompleteSessions.map((s) => s.name).join(", ") + "."); return; }
@@ -1320,7 +1340,8 @@ export default function App() {
   };
   const goBack = () => {
     setError("");
-    if (view === "plan") { setView("select"); setCursor(6); return; }
+    if (view === "plan") { setView("select"); setCursor(weekScopedMode ? scopedWeek : 6); return; }
+    if (view === "select" && weekScopedMode) { setView("welcome"); setCursor(0); return; }
     if (view === "select") { cursor > 0 ? setCursor(cursor - 1) : setView("welcome"); }
   };
   const jumpToWeek = (wk) => { setError(""); setView("select"); setCursor(wk); };
@@ -1339,6 +1360,19 @@ export default function App() {
   const chip = "text-sm font-extrabold rounded-lg border transition-all";
   const calBtn = "w-full inline-flex items-center justify-start gap-2.5 rounded-xl border px-4 py-3 text-sm font-extrabold transition-colors hover:bg-black/[.025]";
   const calBtnStyle = { borderColor: "#D9D3EA", color: NAVY, background: "#fff", boxShadow: "0 1px 2px rgba(23,0,85,.05)" };
+  const inlineCalBtn = "inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm font-extrabold transition-colors hover:bg-black/[.025]";
+  const CalendarLinks = ({ session }) => (
+    <div className="mt-4 rounded-xl p-3" style={{ background: SOFT_SURFACE, border: `1px solid ${LINE}` }}>
+      <p className="text-xs font-extrabold uppercase tracking-wider mb-2" style={{ color: MUTED }}>Add this session to your calendar</p>
+      <div className="flex flex-wrap gap-2">
+        <button onClick={() => downloadOneICS(session)} className={inlineCalBtn} style={calBtnStyle}>Download .ics</button>
+        <a href={googleLink(session)} target="_blank" rel="noopener noreferrer" onClick={() => track("cal_google_inline")} className={inlineCalBtn} style={calBtnStyle}>Google</a>
+        <a href={outlookLink(session, false)} target="_blank" rel="noopener noreferrer" onClick={() => track("cal_outlook_inline")} className={inlineCalBtn} style={calBtnStyle}>Outlook</a>
+        <a href={outlookLink(session, true)} target="_blank" rel="noopener noreferrer" onClick={() => track("cal_office365_inline")} className={inlineCalBtn} style={calBtnStyle}>Office 365</a>
+        <a href={yahooLink(session)} target="_blank" rel="noopener noreferrer" onClick={() => track("cal_yahoo_inline")} className={inlineCalBtn} style={calBtnStyle}>Yahoo</a>
+      </div>
+    </div>
+  );
 
   if (currentPath === GUIDE_PATH) return <GuidePage />;
   if (currentPath === CATALOG_PATH) return <CatalogPage />;
@@ -1425,6 +1459,7 @@ export default function App() {
                 <p className="text-xs mt-2" style={{ color: MUTED }}>Copy the exact date and time from your student portal.</p>
               </div>
             )}
+            {weekScopedMode && sess.date && sess.startTime && <CalendarLinks session={sess} />}
           </div>
         )}
       </div>
@@ -1483,7 +1518,28 @@ export default function App() {
         {/* ============================= SELECT ============================= */}
         {view === "select" && (
           <div className="space-y-5">
-            <WeekRail steps={STEPS} cursor={cursor} totalCount={totalCount} goal={COMPLETION_GOAL} />
+            {!weekScopedMode && <WeekRail steps={STEPS} cursor={cursor} totalCount={totalCount} goal={COMPLETION_GOAL} />}
+
+            {weekScopedMode && cursor >= 1 && (
+              <div className="rounded-2xl p-5 sm:p-6 space-y-3" style={{ background: "#fff", border: `2px solid ${ORANGE}`, boxShadow: CARD_SHADOW }}>
+                <p className="text-xs font-extrabold uppercase tracking-wider" style={{ color: ORANGE }}>Week {cursor} calendar shortcut</p>
+                <div className="space-y-2">
+                  <h1 className="font-black leading-tight" style={{ color: NAVY, fontSize: "clamp(24px, 5vw, 34px)" }}>Add your Week {cursor} session to your calendar.</h1>
+                  <p className="text-sm leading-relaxed" style={{ color: MUTED }}>
+                    Use this after you register. Select only the Week {cursor} workshop(s) you already picked in the student portal, choose the matching time, then add it to your calendar below.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                  <a href={PORTAL_URL} target="_blank" rel="noopener noreferrer" onClick={() => track("portal_click_week_shortcut")}
+                    className="inline-flex items-center justify-center gap-2 font-extrabold py-2.5 px-4 rounded-xl text-white" style={{ background: NAVY }}>
+                    Check my registered session
+                  </a>
+                  <a href="/" className="inline-flex items-center justify-center gap-2 font-extrabold py-2.5 px-4 rounded-xl" style={{ background: "#fff", color: NAVY, border: `1px solid ${LINE}` }}>
+                    Open full planner
+                  </a>
+                </div>
+              </div>
+            )}
 
             {/* --- Kickoff sub-step --- */}
             {cursor === 0 && (
@@ -1546,7 +1602,7 @@ export default function App() {
             {/* --- Week sub-steps --- */}
             {cursor >= 1 && (
               <>
-                {cursor === 1 && (
+                {cursor === 1 && !weekScopedMode && (
                   <div className="space-y-3">
                     <p className="text-sm leading-relaxed" style={{ color: MUTED }}>
                       Now go week by week and tap the workshops you registered for.
@@ -1580,7 +1636,7 @@ export default function App() {
                 </div>
                 <div className="p-4 space-y-3">
                     <p className="text-sm" style={{ color: MUTED }}>
-                      <span>Tap the workshop(s) you registered for, then pick your time.</span>
+                      <span>{weekScopedMode ? `Select the Week ${cursor} workshop(s) you registered for, then pick the matching time.` : "Tap the workshop(s) you registered for, then pick your time."}</span>
                       <span className="block mt-1">
                         Haven't registered? <a href={PORTAL_URL} target="_blank" rel="noopener noreferrer" className="underline font-semibold" style={{ color: NAVY }}>Go to the portal</a> and pick two sessions to attend.
                       </span>
@@ -1598,10 +1654,22 @@ export default function App() {
             )}
 
             <div className="flex justify-between items-center gap-3 pt-1">
-              <button onClick={goBack} className="font-bold" style={{ color: MUTED }}>← Back</button>
-              <button onClick={goNext} className={btnPrimary} style={{ background: ORANGE, color: "#fff" }}>
-                {cursor < 6 ? "Next" : "Review my plan"} →
-              </button>
+              {weekScopedMode && cursor >= 1 ? (
+                <a href="/" className="font-bold" style={{ color: MUTED }}>← Full planner</a>
+              ) : (
+                <button onClick={goBack} className="font-bold" style={{ color: MUTED }}>← Back</button>
+              )}
+              {weekScopedMode && cursor >= 1 ? (
+                <span className="text-sm font-semibold text-right" style={{ color: MUTED }}>
+                  {sessions.some((s) => s.week === cursor && s.date && s.startTime)
+                    ? `Add another Week ${cursor} workshop if you registered for one.`
+                    : "Pick a time above to add it to your calendar."}
+                </span>
+              ) : (
+                <button onClick={goNext} className={btnPrimary} style={{ background: ORANGE, color: "#fff" }}>
+                  {cursor < 6 ? "Next" : "Review my plan"} →
+                </button>
+              )}
             </div>
 
           </div>
@@ -1663,18 +1731,26 @@ export default function App() {
               </>
             ) : (
               <>
-                <h2 className="font-black" style={{ color: NAVY, fontSize: "clamp(26px, 5vw, 36px)" }}>Your plan</h2>
-                <div className="p-5 sm:p-6 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between" style={card}>
-                  <div className="sm:max-w-[52%]">
-                    <ProgressRing count={totalCount} goal={COMPLETION_GOAL} />
+                <h2 className="font-black" style={{ color: NAVY, fontSize: "clamp(26px, 5vw, 36px)" }}>{weekScopedMode ? `Week ${scopedWeek} calendar invite` : "Your plan"}</h2>
+                {weekScopedMode ? (
+                  <div className="p-5 sm:p-6" style={card}>
+                    <p className="text-sm leading-relaxed" style={{ color: MUTED }}>
+                      This shortcut only builds calendar invites for Week {scopedWeek}. It does not register you for a workshop or check your full Career Connect completion plan.
+                    </p>
                   </div>
-                  <div className="flex flex-col items-start gap-3 sm:items-end">
-                    <BriefcaseProgress count={totalCount} goal={COMPLETION_GOAL} />
-                    <button onClick={() => jumpToWeek(1)} className="inline-flex items-center justify-center gap-2 font-extrabold py-3 px-5 rounded-xl shrink-0" style={{ background: sessionsNeeded > 0 ? ORANGE : "#fff", color: sessionsNeeded > 0 ? "#fff" : NAVY, border: `2px solid ${sessionsNeeded > 0 ? ORANGE : LINE}`, boxShadow: sessionsNeeded > 0 ? "0 8px 18px rgba(254,101,0,.18)" : "none" }}>
-                      {addSessionsLabel}
-                    </button>
+                ) : (
+                  <div className="p-5 sm:p-6 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between" style={card}>
+                    <div className="sm:max-w-[52%]">
+                      <ProgressRing count={totalCount} goal={COMPLETION_GOAL} />
+                    </div>
+                    <div className="flex flex-col items-start gap-3 sm:items-end">
+                      <BriefcaseProgress count={totalCount} goal={COMPLETION_GOAL} />
+                      <button onClick={() => jumpToWeek(1)} className="inline-flex items-center justify-center gap-2 font-extrabold py-3 px-5 rounded-xl shrink-0" style={{ background: sessionsNeeded > 0 ? ORANGE : "#fff", color: sessionsNeeded > 0 ? "#fff" : NAVY, border: `2px solid ${sessionsNeeded > 0 ? ORANGE : LINE}`, boxShadow: sessionsNeeded > 0 ? "0 8px 18px rgba(254,101,0,.18)" : "none" }}>
+                        {addSessionsLabel}
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {agenda.length === 0 ? (
                   <div className="rounded-2xl p-6 text-center" style={{ border: `2px solid ${ORANGE}`, background: ORANGE_TINT }}>
@@ -1695,7 +1771,7 @@ export default function App() {
                     {/* calendar-style review */}
                     <div className="overflow-hidden" style={card}>
                       <div className="px-5 py-3.5" style={{ background: SOFT_SURFACE, borderBottom: `1px solid ${LINE}` }}>
-                        <span className="font-extrabold" style={{ color: NAVY }}>Does this look right? Confirm you're adding the right times one on you calendar!</span>
+                        <span className="font-extrabold" style={{ color: NAVY }}>Does this look right? Confirm you're adding the right times to your calendar.</span>
                       </div>
                       <ul>
                         {agenda.map((s, i) => {
@@ -1729,9 +1805,15 @@ export default function App() {
                       <button onClick={() => { setPlanConfirmed(true); track("plan_confirmed"); }} className="inline-flex items-center justify-center gap-2 font-extrabold py-3 px-6 rounded-xl" style={{ background: ORANGE, color: "#fff" }}>
                         Confirm sessions
                       </button>
-                      <button onClick={() => jumpToWeek(1)} className="inline-flex items-center justify-center gap-2 font-extrabold py-3 px-6 rounded-xl" style={{ background: "#fff", color: NAVY, border: `1px solid ${LINE}` }}>
-                        ← {addSessionsLabel}
-                      </button>
+                      {weekScopedMode ? (
+                        <button onClick={() => jumpToWeek(scopedWeek)} className="inline-flex items-center justify-center gap-2 font-extrabold py-3 px-6 rounded-xl" style={{ background: "#fff", color: NAVY, border: `1px solid ${LINE}` }}>
+                          ← Edit Week {scopedWeek}
+                        </button>
+                      ) : (
+                        <button onClick={() => jumpToWeek(1)} className="inline-flex items-center justify-center gap-2 font-extrabold py-3 px-6 rounded-xl" style={{ background: "#fff", color: NAVY, border: `1px solid ${LINE}` }}>
+                          ← {addSessionsLabel}
+                        </button>
+                      )}
                     </div>
                   </>
                 )}
